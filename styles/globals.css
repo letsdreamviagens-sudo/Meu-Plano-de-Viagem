@@ -17,3 +17,21 @@ h1, h2 {
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 16px;
 }
+
+:root{
+  /* 🎨 PALETA LET’S DREAM */
+  --bg: #f6f9fd;          /* fundo claro azulado */
+  --card: #ffffff;       /* cards brancos */
+  --text: #1f2937;       /* texto principal */
+  --muted: #6b7280;      /* texto secundário */
+  --border: rgba(31,41,55,.08);
+
+  --primary: #83acde;    /* azul Let’s Dream */
+  --primary-2: #fcd961;  /* amarelo */
+  --accent: #dd5a07;     /* laranja destaque */
+
+  --success: #22c55e;
+
+  --shadow: 0 12px 30px rgba(31,41,55,.10);
+  --radius: 18px;
+}
