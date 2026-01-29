@@ -225,17 +225,17 @@ export default function Explorar() {
         <div style={{ marginTop: 18 }} className="badge">Carregando…</div>
       ) : (
         <div className="grid">
-          {places.map((p) => (
-            <Card
-              key={p.id}
-              title={p.name}
-              description={p.short_description || ''}
-              image={p.image_url}
-              link={p.youtube_url || undefined}
-              onAdd={() => openAdd(p.id)}
-            />
-          ))}
-        </div>
+  {places.map((p) => (
+    <Card
+      key={p.id}
+      title={p.name}
+      description={p.short_description || ''}
+      image={p.image_url}
+      link={p.youtube_url || undefined}
+      onAdd={() => openAdd(p.id)}
+    />
+  ))}
+</div>
       )}
 
       {addingPlaceId && (
@@ -305,3 +305,4 @@ export default function Explorar() {
     </main>
   )
 }
+
