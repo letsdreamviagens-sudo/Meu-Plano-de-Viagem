@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import Card from '@/components/Card'
+import Card from '../../components/Card'
 import { supabase } from '@/lib/supabaseClient'
 
 type SeedPlace = {
@@ -331,4 +331,5 @@ export default function Explorar() {
     </main>
   )
 }
+
 
