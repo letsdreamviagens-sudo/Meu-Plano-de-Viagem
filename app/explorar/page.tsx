@@ -248,13 +248,14 @@ export default function Explorar() {
               description={p.short_description || ''}
               image={p.image_url}
               link={p.youtube_url || undefined}
-              tags={[
-                p.category === 'attraction' ? '🎢 Atração' : p.category === 'restaurant' ? '🍽️ Restaurante' : '📍 Lugar',
-                p.queue_level ? `⏳ ${p.queue_level}` : '',
-                p.min_height_cm ? `👶 ${p.min_height_cm}cm+` : ''
-              ].filter(Boolean)}
-              onAdd={() => openAdd(p.id)}
-            />
+              <Card
+  key={p.id}
+  title={p.name}
+  description={p.short_description || ''}
+  image={p.image_url}
+  link={p.youtube_url || undefined}
+  onAdd={() => openAdd(p.id)}
+/>
           ))}
         </div>
       )}
@@ -331,5 +332,6 @@ export default function Explorar() {
     </main>
   )
 }
+
 
 
