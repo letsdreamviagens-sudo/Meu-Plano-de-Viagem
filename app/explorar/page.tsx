@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Card from '../../components/Card'
-import { supabase } from '@/lib/supabaseClient'
+import { supabase } from '../../lib/supabaseClient'
 
 type SeedPlace = {
   name: string
@@ -52,7 +52,7 @@ export default function Explorar() {
   const [places, setPlaces] = useState<any[]>([])
   const [activeTripId, setActiveTripId] = useState<string | null>(null)
 
-  // UI do "Adicionar"
+  // modal adicionar
   const [addingPlaceId, setAddingPlaceId] = useState<string | null>(null)
   const [dayId, setDayId] = useState<string>('')
   const [period, setPeriod] = useState<typeof PERIODS[number]['value']>('morning')
@@ -61,26 +61,24 @@ export default function Explorar() {
   const [tripDays, setTripDays] = useState<{ id: string; day_number: number; date: string | null }[]>([])
 
   useEffect(() => {
-    const id = typeof window !== 'undefined' ? localStorage.getItem('active_trip_id') : null
+    const id = localStorage.getItem('active_trip_id')
     setActiveTripId(id)
   }, [])
 
-  // 1) garante que temos "lugares" no banco (seed por nome)
+  // seed + load places
   useEffect(() => {
     const seedAndLoad = async () => {
       setLoading(true)
 
       for (const s of SEED) {
-        const { data: existing, error: selErr } = await supabase
+        const { data: existing } = await supabase
           .from('places')
-          .select('id, name')
+          .select('id')
           .eq('name', s.name)
           .limit(1)
 
-        if (selErr) console.error(selErr)
-
         if (!existing || existing.length === 0) {
-          const { error: insErr } = await supabase.from('places').insert([{
+          await supabase.from('places').insert([{
             name: s.name,
             category: s.category,
             short_description: s.short_description,
@@ -89,19 +87,16 @@ export default function Explorar() {
             queue_level: s.queue_level ?? null,
             min_height_cm: s.min_height_cm ?? null,
             city: 'Penha',
-            is_kid_friendly: true,
+            is_kid_friendly: true
           }])
-
-          if (insErr) console.error(insErr)
         }
       }
 
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('places')
         .select('*')
         .order('created_at', { ascending: false })
 
-      if (error) console.error(error)
       setPlaces(data || [])
       setLoading(false)
     }
@@ -109,21 +104,21 @@ export default function Explorar() {
     seedAndLoad()
   }, [])
 
-  // 2) carrega dias da viagem ativa
+  // load days
   useEffect(() => {
     const loadDays = async () => {
       if (!activeTripId) {
         setTripDays([])
         return
       }
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('trip_days')
         .select('id, day_number, date')
         .eq('trip_id', activeTripId)
         .order('day_number', { ascending: true })
 
-      if (error) console.error(error)
       setTripDays(data || [])
+      setDayId((data && data[0]?.id) || '')
     }
 
     loadDays()
@@ -131,7 +126,6 @@ export default function Explorar() {
 
   const hasTrip = useMemo(() => !!activeTripId, [activeTripId])
 
-  // cria uma viagem demo (sem login) + 3 dias
   const createDemoTrip = async () => {
     const { data: trip, error: tripErr } = await supabase
       .from('trips')
@@ -153,22 +147,18 @@ export default function Explorar() {
 
     const tripId = trip.id as string
 
-    // cria 3 dias (1,2,3)
-    const daysToInsert = [
+    await supabase.from('trip_days').insert([
       { trip_id: tripId, day_number: 1, date: '2026-03-12' },
       { trip_id: tripId, day_number: 2, date: '2026-03-13' },
       { trip_id: tripId, day_number: 3, date: '2026-03-14' },
-    ]
-
-    const { error: daysErr } = await supabase.from('trip_days').insert(daysToInsert)
-    if (daysErr) console.error(daysErr)
+    ])
 
     localStorage.setItem('active_trip_id', tripId)
     setActiveTripId(tripId)
-    alert('Viagem demo criada! Agora você já pode adicionar itens ao roteiro.')
+    alert('Viagem demo criada ✅ Agora já dá pra adicionar itens ao roteiro.')
   }
 
-  const openAdd = async (placeId: string) => {
+  const openAdd = (placeId: string) => {
     if (!activeTripId) {
       alert('Crie uma viagem demo primeiro 🙂')
       return
@@ -176,10 +166,7 @@ export default function Explorar() {
     setAddingPlaceId(placeId)
     setNote('')
     setPeriod('morning')
-
-    // seleciona o primeiro dia por padrão
-    const firstDay = tripDays[0]
-    setDayId(firstDay?.id || '')
+    setDayId(tripDays[0]?.id || '')
   }
 
   const confirmAdd = async () => {
@@ -189,8 +176,7 @@ export default function Explorar() {
       return
     }
 
-    // calcula order_index (último + 1) no mesmo dia/periodo
-    const { data: existing, error: exErr } = await supabase
+    const { data: existing } = await supabase
       .from('trip_day_places')
       .select('order_index')
       .eq('trip_day_id', dayId)
@@ -198,9 +184,7 @@ export default function Explorar() {
       .order('order_index', { ascending: false })
       .limit(1)
 
-    if (exErr) console.error(exErr)
-
-    const nextIndex = (existing?.[0]?.order_index ?? -1) + 1
+    const nextIndex = ((existing?.[0]?.order_index ?? -1) as number) + 1
 
     const { error } = await supabase.from('trip_day_places').insert([{
       trip_day_id: dayId,
@@ -224,21 +208,21 @@ export default function Explorar() {
     <main className="container">
       <section className="hero">
         <h1>🎢 Explorar destino</h1>
-        <p>Escolha atrações, restaurantes, hotéis e adicione ao roteiro por dia/turno.</p>
+        <p>Escolha itens e adicione ao roteiro por dia e período.</p>
 
-        <div className="stack" style={{ marginTop: 12 }}>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 14 }}>
           {!hasTrip ? (
             <button className="btn btnPrimary" onClick={createDemoTrip}>
               ✨ Criar viagem demo (Beto Carrero)
             </button>
           ) : (
-            <span className="badge">Viagem ativa: OK ✅ (agora “Adicionar ao roteiro” salva no banco)</span>
+            <span className="badge">Viagem ativa: OK ✅</span>
           )}
         </div>
       </section>
 
       {loading ? (
-        <div style={{ marginTop: 18 }} className="badge">Carregando lugares…</div>
+        <div style={{ marginTop: 18 }} className="badge">Carregando…</div>
       ) : (
         <div className="grid">
           {places.map((p) => (
@@ -248,19 +232,12 @@ export default function Explorar() {
               description={p.short_description || ''}
               image={p.image_url}
               link={p.youtube_url || undefined}
-              <Card
-  key={p.id}
-  title={p.name}
-  description={p.short_description || ''}
-  image={p.image_url}
-  link={p.youtube_url || undefined}
-  onAdd={() => openAdd(p.id)}
-/>
+              onAdd={() => openAdd(p.id)}
+            />
           ))}
         </div>
       )}
 
-      {/* “modal” simples sem biblioteca */}
       {addingPlaceId && (
         <div
           style={{
@@ -269,17 +246,13 @@ export default function Explorar() {
           }}
           onClick={() => setAddingPlaceId(null)}
         >
-          <div
-            className="card"
-            style={{ width: '100%', maxWidth: 520 }}
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="card" style={{ width: '100%', maxWidth: 520 }} onClick={(e) => e.stopPropagation()}>
             <div className="cardBody">
               <h3 className="cardTitle">Adicionar ao roteiro</h3>
               <p className="cardDesc">Escolha o dia e o período.</p>
 
-              <div className="stack" style={{ marginTop: 10 }}>
-                <div style={{ width: '100%' }}>
+              <div style={{ display: 'grid', gap: 10 }}>
+                <div>
                   <div className="badge" style={{ marginBottom: 6 }}>Dia</div>
                   <select
                     className="btn"
@@ -295,7 +268,7 @@ export default function Explorar() {
                   </select>
                 </div>
 
-                <div style={{ width: '100%' }}>
+                <div>
                   <div className="badge" style={{ marginBottom: 6 }}>Período</div>
                   <select
                     className="btn"
@@ -309,7 +282,7 @@ export default function Explorar() {
                   </select>
                 </div>
 
-                <div style={{ width: '100%' }}>
+                <div>
                   <div className="badge" style={{ marginBottom: 6 }}>Nota (opcional)</div>
                   <input
                     className="btn"
@@ -321,7 +294,7 @@ export default function Explorar() {
                 </div>
               </div>
 
-              <div className="stack" style={{ marginTop: 14, justifyContent: 'flex-end' }}>
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 14 }}>
                 <button className="btn" onClick={() => setAddingPlaceId(null)}>Cancelar</button>
                 <button className="btn btnPrimary" onClick={confirmAdd}>Salvar ✅</button>
               </div>
@@ -332,6 +305,3 @@ export default function Explorar() {
     </main>
   )
 }
-
-
-
