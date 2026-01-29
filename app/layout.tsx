@@ -20,3 +20,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   )
 }
+<nav className="menu">
+  <Link className="btn" href="/">Início</Link>
+  <Link className="btn" href="/explorar">Explorar</Link>
+  <Link className="btn" href="/roteiro">Roteiro</Link>
+  <Link className="btn btnPrimary" href="/checklist">Checklist</Link>
+</nav>
+
