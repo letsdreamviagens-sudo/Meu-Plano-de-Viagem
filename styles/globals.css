@@ -1,37 +1,178 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f5f7fa;
-}
-
-h1, h2 {
-  margin-bottom: 10px;
-}
-
-.container {
-  padding: 20px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 16px;
-}
-
 :root{
-  /* 🎨 PALETA LET’S DREAM */
-  --bg: #f6f9fd;          /* fundo claro azulado */
-  --card: #ffffff;       /* cards brancos */
-  --text: #1f2937;       /* texto principal */
-  --muted: #6b7280;      /* texto secundário */
-  --border: rgba(31,41,55,.08);
+  --bg: #f6f9fd;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --border: rgba(31,41,55,.10);
 
-  --primary: #83acde;    /* azul Let’s Dream */
-  --primary-2: #fcd961;  /* amarelo */
-  --accent: #dd5a07;     /* laranja destaque */
+  --primary: #83acde;   /* azul */
+  --secondary: #fcd961; /* amarelo */
+  --accent: #dd5a07;    /* laranja */
 
-  --success: #22c55e;
-
-  --shadow: 0 12px 30px rgba(31,41,55,.10);
+  --shadow: 0 14px 34px rgba(31,41,55,.10);
   --radius: 18px;
+}
+
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.container{
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 22px;
+}
+
+.nav{
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(246,249,253,.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+.navInner{
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 14px 22px;
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.brand{ display:flex; align-items:center; gap:12px; }
+.brandIcon{
+  width: 40px; height: 40px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  box-shadow: var(--shadow);
+}
+.brandName{ font-weight: 900; letter-spacing:.2px; }
+.brandSub{ font-size: 12px; color: var(--muted); }
+
+.menu{ display:flex; gap:10px; flex-wrap: wrap; }
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.9);
+  cursor:pointer;
+  text-decoration:none;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.btnPrimary{
+  border: none;
+  color: #1f2937;
+  background: linear-gradient(135deg, var(--secondary), #fff2a8);
+  box-shadow: 0 14px 26px rgba(252,217,97,.35);
+}
+
+.hero{
+  margin-top: 18px;
+  padding: 22px;
+  border-radius: var(--radius);
+  background:
+    radial-gradient(900px 340px at 20% 0%, rgba(131,172,222,.28), transparent 55%),
+    radial-gradient(900px 340px at 90% 20%, rgba(252,217,97,.26), transparent 55%),
+    rgba(255,255,255,.78);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.hero h1{ margin:0 0 8px; font-size: 30px; line-height: 1.1; }
+.hero p{ margin:0; color: var(--muted); font-size: 15px; }
+
+.grid{
+  margin-top: 18px;
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.cardBody{ padding: 14px; }
+
+.cardTitle{
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.cardDesc{
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.85);
+  color: var(--muted);
+}
+
+.checkWrap{
+  background: rgba(255,255,255,.80);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+
+.checkItem{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: #fff;
+  cursor:pointer;
+  margin: 10px 0;
+}
+
+.checkLeft{ display:flex; align-items:center; gap:10px; }
+
+.dot{
+  width: 18px; height: 18px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: rgba(131,172,222,.18);
+}
+
+.checked .dot{
+  background: rgba(221,90,7,.18);
+  border-color: rgba(221,90,7,.35);
+}
+
+.checked .label{
+  color: #9CA3AF;
+  text-decoration: line-through;
 }
