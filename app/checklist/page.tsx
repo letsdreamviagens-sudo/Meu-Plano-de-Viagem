@@ -1,5 +1,6 @@
 'use client'
-import ChecklistItem from '@/components/ChecklistItem'
+import ChecklistItem from '../../components/ChecklistItem'
+
 
 export default function Checklist() {
   return (
@@ -23,4 +24,5 @@ export default function Checklist() {
     </main>
   )
 }
+
 
