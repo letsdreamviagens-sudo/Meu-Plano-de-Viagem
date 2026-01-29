@@ -1,4 +1,4 @@
-import '../styles/globals.css'
+import './globals.css'
 import Link from 'next/link'
 
 export const metadata = {
@@ -10,7 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-br">
       <body>
-        <header className="nav">
+        <div className="nav">
           <div className="navInner">
             <div className="brand">
               <span className="brandIcon">✈️</span>
@@ -22,12 +22,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             <nav className="menu">
               <Link className="btn" href="/">Início</Link>
-              <Link className="btn" href="/explorar">Explorar Destino</Link>
-              <Link className="btn btnPrimary" href="/checklist">Checklist</Link>
+              <Link className="btn" href="/explorar">Explorar</Link>
               <Link className="btn" href="/roteiro">Roteiro</Link>
+              <Link className="btn btnPrimary" href="/checklist">Checklist</Link>
             </nav>
           </div>
-        </header>
+        </div>
 
         {children}
       </body>
