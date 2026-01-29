@@ -236,21 +236,23 @@ export default function Explorar() {
       </section>
 
       {loading ? (
-        <div style={{ marginTop: 18 }} className="badge">
-          Carregando…
-        </div>
-      ) : (
-        <div className="grid">
-  {places.map((p) => (
-    <Card
-      key={p.id}
-      title={p.name}
-      description={p.short_description || ''}
-      image={p.image_url}
-      link={p.youtube_url || undefined}
-      onAdd={() => openAdd(p.id)}
-    />
-  ))}
+  <div style={{ marginTop: 18 }} className="badge">
+    Carregando…
+  </div>
+) : (
+  <div className="grid">
+    {places.map((p) => (
+      <Card
+        key={p.id}
+        title={p.name}
+        description={p.short_description || ''}
+        image={p.image_url}
+        link={p.youtube_url || undefined}
+        onAdd={() => openAdd(p.id)}
+      />
+    ))}
+  </div>
+)}
 </div>
       {addingPlaceId && (
         <div
@@ -349,4 +351,5 @@ export default function Explorar() {
     </main>
   )
 }
+
 
