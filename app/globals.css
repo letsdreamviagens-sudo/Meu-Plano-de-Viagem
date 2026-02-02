@@ -1,0 +1,47 @@
+:root{
+  --bg:#f6f9fd; --card:#fff; --text:#1f2937; --muted:#6b7280; --border:rgba(31,41,55,.10);
+  --primary:#83acde; --secondary:#fcd961; --accent:#dd5a07;
+  --shadow:0 14px 34px rgba(31,41,55,.10); --radius:18px;
+}
+
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
+a{color:inherit}
+.container{max-width:1040px;margin:0 auto;padding:22px}
+
+.nav{position:sticky;top:0;z-index:10;background:rgba(246,249,253,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.navInner{max-width:1040px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.brandIcon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:14px;background:linear-gradient(135deg,var(--primary),var(--secondary));box-shadow:var(--shadow)}
+.brandName{font-weight:900}
+.brandSub{font-size:12px;color:var(--muted)}
+.menu{display:flex;gap:10px;flex-wrap:wrap}
+
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.92);text-decoration:none;color:var(--text);font-weight:700;cursor:pointer}
+.btnPrimary{border:none;background:linear-gradient(135deg,var(--secondary),#fff2a8);box-shadow:0 14px 26px rgba(252,217,97,.35)}
+.badge{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;font-size:12px;border:1px solid var(--border);background:rgba(255,255,255,.85);color:var(--muted)}
+
+.hero{
+  margin-top:18px;padding:22px;border-radius:var(--radius);
+  background:
+    radial-gradient(900px 340px at 20% 0%,rgba(131,172,222,.28),transparent 55%),
+    radial-gradient(900px 340px at 90% 20%,rgba(252,217,97,.26),transparent 55%),
+    rgba(255,255,255,.78);
+  border:1px solid var(--border);box-shadow:var(--shadow)
+}
+.hero h1{margin:0 0 8px;font-size:30px;line-height:1.1}
+.hero p{margin:0;color:var(--muted);font-size:15px}
+
+.grid{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.cardBody{padding:14px}
+.cardTitle{margin:0 0 6px;font-size:16px;font-weight:900}
+.cardDesc{margin:0 0 10px;font-size:13px;color:var(--muted);line-height:1.35}
+
+.metaRow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stack{display:flex;gap:10px;flex-wrap:wrap}
+
+.panel{margin-top:18px;background:rgba(255,255,255,.82);border:1px solid var(--border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border-radius:14px;border:1px solid var(--border);background:#fff;margin:10px 0}
+.small{font-size:12px;color:var(--muted)}
+.hr{height:1px;background:var(--border);margin:10px 0}
