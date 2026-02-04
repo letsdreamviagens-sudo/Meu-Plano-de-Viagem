@@ -9,10 +9,64 @@ export default function SeedPage() {
   const [msg, setMsg] = useState('')
 
   const runSeed = async () => {
-    if (!supabase) {
-      setMsg('Supabase não configurado.')
-      return
-    }
+  if (!supabase) {
+    setMsg('Supabase não configurado.')
+    return
+  }
+
+  setLoading(true)
+  setMsg('Preparando…')
+
+  const rows = BETO_CARRERO_ITEMS.map((i) => ({
+    name: i.name,
+    category: i.category,
+    short_description: i.short_description,
+    image_url: null,
+    youtube_url: i.youtube_url || null,
+
+    city: 'Penha',
+    location_area: (i as any).area || null,
+    is_kid_friendly: i.profile !== 'radical',
+
+    min_height_cm: i.min_height_cm ?? null,
+    thrill_level: i.profile || null,
+    queue_level: i.queue_level || null
+  }))
+
+  const { data: existing, error: selErr } = await supabase
+    .from('places')
+    .select('name')
+    .eq('city', 'Penha')
+
+  if (selErr) {
+    console.error(selErr)
+    setMsg(`Erro ao buscar existentes: ${selErr.message}`)
+    setLoading(false)
+    return
+  }
+
+  const setNames = new Set((existing || []).map((e: any) => e.name))
+  const toInsert = rows.filter((r) => !setNames.has(r.name))
+
+  if (toInsert.length === 0) {
+    setMsg('Já está tudo no banco ✅')
+    setLoading(false)
+    return
+  }
+
+  const { error: insErr } = await supabase.from('places').insert(toInsert)
+
+  if (insErr) {
+    console.error(insErr)
+    setMsg(`Erro ao inserir: ${insErr.message}`)
+    setLoading(false)
+    return
+  }
+
+  setMsg(`Seed concluída ✅ Inseridos: ${toInsert.length}`)
+  setLoading(false)
+}
+
 
     setLoading(true)
     setMsg('Preparando…')
